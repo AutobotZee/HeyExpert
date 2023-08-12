@@ -46,7 +46,9 @@ class ExpertHandler():
         try:
             with open(persona + '.pickle', 'rb') as file:
                 data = pkl.load(file)
-                return data
+                obj = OpenaiExpert(data['name'])
+                obj.messages = data['messages']
+                return obj
 
         except (OSError, IOError) as e:
             print(f"No such file exists, Create one now with name {persona}.pickle")

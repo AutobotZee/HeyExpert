@@ -12,14 +12,18 @@ def run_process(expert, start):
             messages = data
         )
         token = input(f"$BOT : {response.choices[0].message.content}")
-        start = message_builder('assistant', token)
+
+        start = message_builder('assistant', response.choices[0].message.content)
         data.append(start)
+        start = message_builder('user', token)
+        data.append(start)
+
         expert.messages.append(data)
-        sorted_messages = set(expert.messages)
-        expert.messages = sorted_messages
+        #sorted_messages = set(expert.messages)
+        #expert.messages = sorted_messages
         if "Thanks" in token:
             print("Closing now")
-            break
+            return True
 
 
 def message_builder(participant, prompt):
@@ -40,7 +44,7 @@ if __name__ == '__main__':
         print('Persona Loaded')
         token = input('What would you like to ask now ??')
         while (token != None) or (token in 'Thanks'):
-            run_process(expert_obj, token)
+            exec_response = run_process(expert_obj, token)
             handler.save_persona(expert_obj)
-
-
+            if exec_response : break
+        print('Application closed')
